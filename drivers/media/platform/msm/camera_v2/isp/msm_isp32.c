@@ -154,6 +154,13 @@ static void msm_vfe32_init_hardware_reg(struct vfe_device *vfe_dev)
         msm_camera_io_w_mb(0xFFFFFFFF, vfe_dev->vfe_base + 0x24);       //Aravind
         msm_camera_io_w_mb(0x1FFFFFFF, vfe_dev->vfe_base + 0x28);
         msm_camera_io_w_mb(0x1, vfe_dev->vfe_base + 0x18);              //Aravind
+
+	msm_camera_io_w(0x0, vfe_dev->vfe_base+0x6FC);
+	msm_camera_io_w( 0x10000000,vfe_dev->vfe_base + VFE32_RDI_BASE(1));
+	msm_camera_io_w( 0x10000000,vfe_dev->vfe_base + VFE32_RDI_BASE(2));
+	msm_camera_io_w(0x0, vfe_dev->vfe_base + VFE32_XBAR_BASE(0));
+	msm_camera_io_w(0x0, vfe_dev->vfe_base + VFE32_XBAR_BASE(4));
+
         //Aravind start
         vfe_dev->error_info.error_mask1 =0;
         vfe_dev->error_info.error_mask0 =0;
@@ -161,8 +168,13 @@ static void msm_vfe32_init_hardware_reg(struct vfe_device *vfe_dev)
         vfe_dev->error_info.violation_status =0;
         //Aravind end
 #else
-        msm_camera_io_w(0xFFFFFFFF, vfe_dev->vfe_base + 0x24);
-        msm_camera_io_w_mb(0x1FFFFFFF, vfe_dev->vfe_base + 0x28);
+	msm_camera_io_w(0xFFFFFFFF, vfe_dev->vfe_base + 0x24);
+	msm_camera_io_w_mb(0x1FFFFFFF, vfe_dev->vfe_base + 0x28);
+	msm_camera_io_w(0x0, vfe_dev->vfe_base+0x6FC);
+	msm_camera_io_w( 0x10000000,vfe_dev->vfe_base + VFE32_RDI_BASE(1));
+	msm_camera_io_w( 0x10000000,vfe_dev->vfe_base + VFE32_RDI_BASE(2));
+	msm_camera_io_w(0x0, vfe_dev->vfe_base + VFE32_XBAR_BASE(0));
+	msm_camera_io_w(0x0, vfe_dev->vfe_base + VFE32_XBAR_BASE(4));
 #endif
 
 }
