@@ -291,7 +291,11 @@ obj-$(CONFIG_ARCH_MPQ8092) += clock-8092.o
 obj-$(CONFIG_ARCH_MSM8226) += board-8226.o board-8226-gpiomux.o
 obj-$(CONFIG_ARCH_MSM8226) += clock-local2.o clock-pll.o clock-8226.o clock-rpm.o clock-voter.o clock-mdss-8974.o
 obj-$(CONFIG_ARCH_MSM8226) += acpuclock-8226.o acpuclock-cortex.o
+ifdef CONFIG_MACH_LGE
+obj-$(CONFIG_ARCH_MSM8610) += lge/
+else
 obj-$(CONFIG_ARCH_MSM8610) += board-8610.o board-8610-gpiomux.o
+endif
 obj-$(CONFIG_ARCH_MSM8610) += clock-local2.o clock-pll.o clock-8610.o clock-rpm.o clock-voter.o
 obj-$(CONFIG_ARCH_MSM8610) += acpuclock-8226.o acpuclock-cortex.o
 obj-$(CONFIG_ARCH_MSM8610) += clock-dsi-8610.o

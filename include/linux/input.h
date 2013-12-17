@@ -471,6 +471,9 @@ struct input_keymap_entry {
 
 #define KEY_MICMUTE		248	/* Mute / unmute the microphone */
 
+#define KEY_SIMSWITCH		249	/* Multi SIM Switch key */
+#define KEY_HOTKEY		250	/* Quick Clip key*/
+
 /* Code 255 is reserved for special needs of AT keyboard driver */
 
 #define BTN_MISC		0x100

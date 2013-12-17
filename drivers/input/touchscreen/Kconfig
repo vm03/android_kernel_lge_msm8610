@@ -1020,6 +1020,77 @@ config SECURE_TOUCH
 
 	  If unsure, say N.
 
+config TOUCHSCREEN_IST30XX
+       bool "Imagis IST30XX touch driver"
+       depends on I2C
+       help
+         Say Y here if you have a Imagis IST30XX I2C touchscreen
+         connected to your system.
+
+         If unsure, say N.
+
+config LGE_TOUCHSCREEN_SYNAPTIC
+        bool "SYNAPTICS touchscreen"
+        default n
+        help
+                Say Y here if you have the SYNAPTICS touchscreen controller
+                chip in your system.
+
+config LGE_TOUCHSCREEN_CORE
+        tristate "SYNAPTICS TOUCHSCREEN CORE "
+        depends on I2C && LGE_TOUCHSCREEN_SYNAPTIC
+        default y
+        help
+                Say Y here if you have the SYNAPTICS touchscreen controller
+                chip in your system.
+
+                If unsure, say N.
+
+                To compile this driver as a module, choose M here: the
+                module will be called SYNAPTICS_ts.
+
+config LGE_TOUCH_SYNAPTICS
+        tristate "SYNAPTICS SYNAPTICS"
+        depends on I2C && LGE_TOUCHSCREEN_SYNAPTIC
+        default y
+        help
+                Say Y here if you have the SYNAPTICS touchscreen controller
+                chip in your system.
+
+                If unsure, say N.
+
+                To compile this driver as a module, choose M here: the
+                module will be called SYNAPTICS_ts.
+
+config LGE_TOUCH_SYNAPTICS_FW_UPGRADE
+        tristate "SYNAPTICS FW UPGRADE "
+        depends on I2C && LGE_TOUCHSCREEN_SYNAPTIC
+        default y
+                help
+                Say Y here if you have the SYNAPTICS touchscreen controller
+                chip in your system.
+
+                If unsure, say N.
+
+                To compile this driver as a module, choose M here: the
+                module will be called SYNAPTICS_ts.
+
+config TOUCHSCREEN_LGE_TOUCHCORE
+        bool "LGE Touch Core driver"
+        depends on I2C
+        default n
+        help
+         Say Y here if you use lge touch core
+         if unsure, say N
+
+config TOUCHSCREEN_LGE_MELFAS
+        bool "Melfas MMS-100S or MMS-100A based on LGE Touch Core driver"
+        depends on I2C && TOUCHSCREEN_LGE_TOUCHCORE
+        default n
+        help
+         Say Y here if you have a Mefas MMS-100S or MMS-100A I2C touchscreen
+         connected to your system.
+
 config TOUCHSCREEN_GT9XX
 	bool "Goodix touchpanel GT9xx series"
 	depends on I2C
