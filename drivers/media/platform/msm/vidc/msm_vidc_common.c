@@ -3424,14 +3424,14 @@ int msm_vidc_check_session_supported(struct msm_vidc_inst *inst)
 				capability->height.min);
 			rc = -ENOTSUPP;
 		}
+
 		if (!rc) {
 			rc = call_hfi_op(hdev, capability_check,
-				inst->fmts[OUTPUT_PORT]->fourcc,
-				inst->prop.width[CAPTURE_PORT],
-				&capability->width.max,
-				&capability->height.max);
+					inst->fmts[OUTPUT_PORT]->fourcc,
+					inst->prop.width[CAPTURE_PORT],
+					&capability->width.max,
+					&capability->height.max);
 		}
-
 		if (!rc && (inst->prop.height[CAPTURE_PORT]
 			* inst->prop.width[CAPTURE_PORT] >
 			capability->width.max * capability->height.max)) {
