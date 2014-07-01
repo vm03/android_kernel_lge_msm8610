@@ -1,0 +1,68 @@
+config FB_MSM_MDSS_WRITEBACK
+	bool "MDSS Writeback Panel"
+	---help---
+	The MDSS Writeback Panel provides support for routing the output of
+	MDSS frame buffer driver and MDP processing to memory.
+
+config FB_MSM_MDSS_HDMI_PANEL
+	depends on FB_MSM_MDSS
+	bool "MDSS HDMI Tx Panel"
+	default n
+	---help---
+	The MDSS HDMI Panel provides support for transmitting TMDS signals of
+	MDSS frame buffer data to connected hdmi compliant TVs, monitors etc.
+
+config FB_MSM_MDSS_HDMI_MHL_SII8334
+	depends on FB_MSM_MDSS_HDMI_PANEL
+	bool 'MHL SII8334 support '
+	default n
+	---help---
+	  Support the HDMI to MHL conversion.
+	  MHL (Mobile High-Definition Link) technology
+	  uses USB connector to output HDMI content
+
+config FB_MSM_MDSS_DSI_CTRL_STATUS
+	tristate "DSI controller status check feature"
+	---help---
+	  Check DSI controller status periodically (default period is 5
+	  seconds) by sending Bus-Turn-Around (BTA) command. If DSI controller
+	  fails to acknowledge the BTA command, it sends PANEL_ALIVE=0 status
+	  to HAL layer to reset the controller.
+
+config FB_MSM_MDSS_MDP3
+        depends on FB_MSM_MDSS
+        bool "MDP3 display controller"
+        ---help---
+        The MDP3 provides support for an older version display controller
+        included in latest display sub-system, known as MDSS.
+
+config LGE_LCD_DCDC
+        tristate "Display Mode - DCDC Mode Enable "
+        default n
+
+config LCD_KCAL
+        bool "Enable sysfs for LCD KCAL"
+        default n
+
+config LGE_MIPI_TOVIS_VIDEO_540P_PANEL
+        bool "MIPI TOVIS VIDEO 540P PANEL && MIPI TOVIS VIDEO 540 PANEL WITH DSV"
+        default n
+
+config LGE_MIPI_NT35521_VIDEO_720P_PANEL
+	bool "MIPI NT35521 VIDEO 720P PANEL && MIPI NT35521 VIDEO 720P PANEL WITH DSV"
+	default n
+
+config FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL
+	bool "MIPI TIANMA VIDEO QHD PT panel"
+	select FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT
+	---help---
+	Support for TIANMA VIDEO QHD PT panel
+
+config FB_MSM_MIPI_LGIT_LH470WX1_VIDEO_HD_PT_PANEL
+	bool "MIPI LG Display HD PT Panel"
+	---help---
+	Support for LGIT LH470WX1  VIDEO QHD PT panel
+config FB_MSM_MIPI_TOVIS_LM570HN1A_VIDEO_HD_PT_PANEL
+	bool "MIPI TOVIS Display HD PT Panel"
+	---help---
+	Support for TOVIS LM570HN1A  VIDEO HD PT panel
