@@ -458,11 +458,11 @@ static int mdss_fb_probe(struct platform_device *pdev)
 	mfd->bl_level = 0;
 	mfd->bl_scale = 1024;
 	mfd->bl_min_lvl = 30;
-#if defined(CONFIG_FB_MSM_MIPI_TIANMA_CMD_HVGA_PT)
-	mfd->fb_imgType = MDP_RGB_565;
-#else
+//#if defined(CONFIG_FB_MSM_MIPI_TIANMA_CMD_HVGA_PT)
+//	mfd->fb_imgType = MDP_RGB_565;
+//#else
 	mfd->fb_imgType = MDP_RGBA_8888;
-#endif
+//#endif
 
 	mfd->pdev = pdev;
 	if (pdata->next)
