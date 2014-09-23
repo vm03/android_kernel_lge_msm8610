@@ -70,8 +70,9 @@
 			    /* 0: No image(default), 1: W3DS(GLOBAL COM)(PLG312_T001), 2: W3S(VDF)(PLG311_T001), ... */
 				panel_type = <1>;
 				/*maker_id  disable(0), enable(1)*/
-				maker_id = <0>;
-				maker_id_gpio = <0>;
+				maker_id = <0x1>;
+				maker_id_gpio = <0x4c>;
+				maker_id2_gpio = <0x4d>;
 				palm_detect_mode = <1>;
 				ghost_detection_enable = <1>;
 				ghost_detection_value = <200 50 8 6 11 5 10 500 100 6 5>;
