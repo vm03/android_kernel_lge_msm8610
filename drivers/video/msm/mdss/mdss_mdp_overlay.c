@@ -36,6 +36,10 @@
 #include "mdss_mdp_rotator.h"
 
 #include "splash.h"
+#if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL)
+extern int is_dsv_cont_splash_screening_f;
+extern int has_dsv_f;
+#endif
 
 #define VSYNC_PERIOD 16
 #define BORDERFILL_NDX	0x0BF000BF

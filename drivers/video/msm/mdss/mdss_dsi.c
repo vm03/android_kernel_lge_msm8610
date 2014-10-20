@@ -21,6 +21,7 @@
 #include <linux/gpio.h>
 #include <linux/err.h>
 #include <linux/regulator/consumer.h>
+#include <mach/board_lge.h>
 
 #include "mdss.h"
 #include "mdss_panel.h"
@@ -28,6 +29,10 @@
 #include "mdss_debug.h"
 
 static unsigned char *mdss_dsi_base;
+
+#if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_LGIT_LH470WX1_VIDEO_HD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_TOVIS_LM570HN1A_VIDEO_HD_PT_PANEL)
+int has_dsv_f;
+#endif
 
 static int mdss_dsi_regulator_init(struct platform_device *pdev)
 {
@@ -54,6 +59,9 @@ static int mdss_dsi_panel_power_on(struct mdss_panel_data *pdata, int enable)
 	int ret;
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
 
+	hw_rev_type hw_rev;
+	hw_rev = lge_get_board_revno();
+	
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
 		ret = -EINVAL;
@@ -73,13 +81,20 @@ static int mdss_dsi_panel_power_on(struct mdss_panel_data *pdata, int enable)
 				__func__, ret);
 			goto error;
 		}
-
-		if (pdata->panel_info.panel_power_on == 0)
+#if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL)
+		if (!has_dsv_f && pdata->panel_info.panel_power_on == 0)//LGE Change
 			mdss_dsi_panel_reset(pdata, 1);
-
+#else
+		if(pdata->panel_info.panel_power_on ==0) //qct original
+			mdss_dsi_panel_reset(pdata, 1);
+#endif
 	} else {
-
-		mdss_dsi_panel_reset(pdata, 0);
+#if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_LGIT_LH470WX1_VIDEO_HD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_TOVIS_LM570HN1A_VIDEO_HD_PT_PANEL)
+		if (!has_dsv_f) //LGE Change
+			mdss_dsi_panel_reset(pdata, 0);
+#else
+		mdss_dsi_panel_reset(pdata, 0); //qct original
+#endif
 
 		ret = msm_dss_enable_vreg(
 			ctrl_pdata->power_data.vreg_config,
@@ -483,6 +498,18 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		MIPI_OUTP((ctrl_pdata->ctrl_base) + 0xac, tmp);
 		wmb();
 	}
+
+	#if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_LGIT_LH470WX1_VIDEO_HD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_TOVIS_LM570HN1A_VIDEO_HD_PT_PANEL)
+	if( has_dsv_f ) {
+	  u32 tmp;
+	  tmp = MIPI_INP((ctrl_pdata->ctrl_base) + 0xac);
+	  tmp &= ~(1<<28);
+	  MIPI_OUTP((ctrl_pdata->ctrl_base) + 0xac, tmp);
+	  wmb();
+	  mdss_dsi_panel_reset(pdata, 1);
+	  pr_info(" panel reset after mipi stop state. lane_ctrl value = %x\n", tmp);
+	}
+	#endif
 
 	if (pdata->panel_info.type == MIPI_CMD_PANEL)
 		mdss_dsi_clk_ctrl(ctrl_pdata, 0);
@@ -1373,6 +1400,11 @@ int dsi_panel_device_register(struct device_node *pan_node,
 			ctrl_pdata->pclk_rate, ctrl_pdata->byte_clk_rate);
 
 	ctrl_pdata->ctrl_state = CTRL_STATE_UNKNOWN;
+
+  #if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_LGIT_LH470WX1_VIDEO_HD_PT_PANEL) || defined(CONFIG_FB_MSM_MIPI_TOVIS_LM570HN1A_VIDEO_HD_PT_PANEL)
+	has_dsv_f = of_property_read_bool(pan_node,
+			"lge,has-dsv");
+  #endif
 
 	if (pinfo->cont_splash_enabled) {
 		pinfo->panel_power_on = 1;

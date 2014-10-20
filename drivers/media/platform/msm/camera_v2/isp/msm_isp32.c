@@ -150,13 +150,20 @@ static void msm_vfe32_init_hardware_reg(struct vfe_device *vfe_dev)
 	msm_camera_io_w(0x00000009, vfe_dev->vfe_base + 0x3C);
 	msm_camera_io_w(0x01000025, vfe_dev->vfe_base + 0x1C);
 	msm_camera_io_w_mb(0x1CFFFFFF, vfe_dev->vfe_base + 0x20);
-	msm_camera_io_w(0xFFFFFFFF, vfe_dev->vfe_base + 0x24);
-	msm_camera_io_w_mb(0x1FFFFFFF, vfe_dev->vfe_base + 0x28);
-	msm_camera_io_w(0x0, vfe_dev->vfe_base+0x6FC);
-	msm_camera_io_w( 0x10000000,vfe_dev->vfe_base + VFE32_RDI_BASE(1));
-	msm_camera_io_w( 0x10000000,vfe_dev->vfe_base + VFE32_RDI_BASE(2));
-	msm_camera_io_w(0x0, vfe_dev->vfe_base + VFE32_XBAR_BASE(0));
-	msm_camera_io_w(0x0, vfe_dev->vfe_base + VFE32_XBAR_BASE(4));
+#if defined(CONFIG_HI351)
+        msm_camera_io_w_mb(0xFFFFFFFF, vfe_dev->vfe_base + 0x24);       //Aravind
+        msm_camera_io_w_mb(0x1FFFFFFF, vfe_dev->vfe_base + 0x28);
+        msm_camera_io_w_mb(0x1, vfe_dev->vfe_base + 0x18);              //Aravind
+        //Aravind start
+        vfe_dev->error_info.error_mask1 =0;
+        vfe_dev->error_info.error_mask0 =0;
+        vfe_dev->error_info.camif_status =0;
+        vfe_dev->error_info.violation_status =0;
+        //Aravind end
+#else
+        msm_camera_io_w(0xFFFFFFFF, vfe_dev->vfe_base + 0x24);
+        msm_camera_io_w_mb(0x1FFFFFFF, vfe_dev->vfe_base + 0x28);
+#endif
 
 }
 

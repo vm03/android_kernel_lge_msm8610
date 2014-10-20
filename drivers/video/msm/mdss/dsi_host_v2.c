@@ -1220,6 +1220,15 @@ static int msm_dsi_cont_on(struct mdss_panel_data *pdata)
 	msm_dsi_set_irq(ctrl_pdata, DSI_INTR_ERROR_MASK);
 	dsi_host_private->clk_count = 1;
 	dsi_host_private->dsi_on = 1;
+#if defined(CONFIG_FB_MSM_MIPI_TIANMA_CMD_HVGA_PT_PANEL)
+     if (gpio_is_valid(ctrl_pdata->disp_te_gpio)) {
+         ret = gpio_request(ctrl_pdata->disp_te_gpio, "disp_te");
+         if (ret)
+             pr_err("gpio request failed %d\n", ret);
+ 
+         ctrl_pdata->disp_te_gpio_requested = 1;
+     }
+#endif
 	mutex_unlock(&ctrl_pdata->mutex);
 	return 0;
 }

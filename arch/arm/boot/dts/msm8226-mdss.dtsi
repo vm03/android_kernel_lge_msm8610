@@ -45,6 +45,8 @@
 
 		qcom,mdss-smp-data = <7 4096>;
 
+		qcom,mdss-no-lut-read;
+
 		qcom,mdss-ctl-off = <0x00000600 0x00000700>;
 		qcom,mdss-mixer-intf-off = <0x00003200>;
 		qcom,mdss-mixer-wb-off = <0x00003E00>;
@@ -58,7 +60,8 @@
 
 		qcom,vbif-settings = <0x004 0x00000001>,
 				     <0x0D8 0x00000707>,
-				     <0x124 0x00000003>;
+				     <0x124 0x00000003>,
+				     <0x0C0 0x02101010>;//for limiting the number of outstanding transactions for the rotator write port
 		qcom,mdp-settings = <0x02E0 0x000000A5>,
 				    <0x02E4 0x00000055>;
 
@@ -86,8 +89,9 @@
 		vdd-supply = <&pm8226_l15>;
 		vddio-supply = <&pm8226_l8>;
 		vdda-supply = <&pm8226_l4>;
+		qcom,platform-enable-gpio = <&msmgpio 111 0>;
 		qcom,platform-reset-gpio = <&msmgpio 25 0>;
-		qcom,platform-te-gpio = <&msmgpio 24 0>;
+		/*qcom,platform-te-gpio = <&msmgpio 24 0>;*/
 		qcom,platform-strength-ctrl = [ff 06];
 		qcom,platform-bist-ctrl = [00 00 b1 ff 00 00];
 		qcom,platform-regulator-settings = [07 09 03 00 20 00 01];

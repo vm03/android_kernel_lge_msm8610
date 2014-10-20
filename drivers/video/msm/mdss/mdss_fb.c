@@ -53,6 +53,16 @@
 
 #include "mdss_fb.h"
 
+#ifdef CONFIG_MACH_LGE
+#include "mdss_mdp.h"
+#include <mach/board_lge.h>
+#if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL)
+extern int is_dsv_cont_splash_screening_f;
+#endif
+static int force_set_bl_f;
+unsigned long msm_fb_phys_addr_backup;
+#endif
+
 #ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
 #define MDSS_FB_NUM 3
 #else
@@ -208,9 +218,15 @@ static void mdss_fb_set_bl_brightness(struct led_classdev *led_cdev,
 
 	/* This maps android backlight level 0 to 255 into
 	   driver backlight level 0 to bl_max with rounding */
-	MDSS_BRIGHT_TO_BL(bl_lvl, value, mfd->panel_info->bl_max,
-				mfd->panel_info->brightness_max);
-
+#if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL)
+        cal_value = mapped_value[value];
+        MDSS_BRIGHT_TO_BL(bl_lvl, cal_value, mfd->panel_info->bl_max,
+                        MDSS_MAX_BL_BRIGHTNESS);
+        pr_info("value=%d, cal_value=%d\n", value, cal_value);
+#else
+        MDSS_BRIGHT_TO_BL(bl_lvl, value, mfd->panel_info->bl_max,
+                                mfd->panel_info->brightness_max);
+#endif
 	if (!bl_lvl && value)
 		bl_lvl = 1;
 
@@ -777,6 +793,21 @@ void mdss_fb_set_backlight(struct msm_fb_data_type *mfd, u32 bkl_lvl)
 	int (*update_ad_input)(struct msm_fb_data_type *mfd);
 	u32 temp = bkl_lvl;
 
+  #ifdef CONFIG_MACH_LGE
+  if( force_set_bl_f || lge_get_boot_mode()== LGE_BOOT_MODE_QEM_130K
+        /*
+                                                      */ ) {
+    pdata = dev_get_platdata(&mfd->pdev->dev);
+    if ((pdata) && (pdata->set_backlight)) {
+      mdss_fb_scale_bl(mfd, &temp);
+      pdata->set_backlight(pdata, temp);
+      pr_info("regardless bl_updated, force to set bl. level=%d, laf_mode=%d\n",/*cont_sp=%d",*/
+                temp, lge_get_laf_mode()/*, is_dsv_cont_splash_screening_f */);
+    }
+    return;
+  }
+  #endif
+
 	if (((!mfd->panel_power_on && mfd->dcm_state != DCM_ENTER)
 		|| !mfd->bl_updated) && !IS_CALIB_MODE_BL(mfd)) {
 		mfd->unset_bl_level = bkl_lvl;
@@ -1035,7 +1066,10 @@ static int mdss_fb_alloc_fbmem_iommu(struct msm_fb_data_type *mfd, int dom)
 	mfd->fbi->screen_base = virt;
 	mfd->fbi->fix.smem_start = phys;
 	mfd->fbi->fix.smem_len = size;
-
+#ifdef CONFIG_MACH_LGE
+        msm_fb_phys_addr_backup = phys;
+        memset(virt,0,size);
+#endif
 	return 0;
 }
 
@@ -2343,6 +2377,9 @@ static int mdss_fb_ioctl(struct fb_info *info, unsigned int cmd,
 	int ret = -ENOSYS;
 	struct mdp_buf_sync buf_sync;
 	struct msm_sync_pt_data *sync_pt_data = NULL;
+#ifdef CONFIG_MACH_LGE
+	u32 dsi_panel_invert = 0;
+#endif
 	if (!info || !info->par)
 		return -EINVAL;
 
@@ -2407,6 +2444,14 @@ static int mdss_fb_ioctl(struct fb_info *info, unsigned int cmd,
 	case MSMFB_DISPLAY_COMMIT:
 		ret = mdss_fb_display_commit(info, argp);
 		break;
+#ifdef CONFIG_MACH_LGE
+        case MSMFB_INVERT_PANEL:
+                ret = copy_from_user(&dsi_panel_invert, argp, sizeof(int));
+                if(ret)
+                        return ret;
+                ret = mdss_dsi_panel_invert(dsi_panel_invert);
+        break;
+#endif
 
 	default:
 		if (mfd->mdp.ioctl_handler)
