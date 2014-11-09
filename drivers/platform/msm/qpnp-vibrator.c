@@ -55,7 +55,8 @@ struct qpnp_vib {
 	struct mutex lock;
 };
 
-static struct qpnp_vib *vib_dev;
+struct qpnp_vib *vib_dev;
+EXPORT_SYMBOL(vib_dev);
 
 static int qpnp_vib_read_u8(struct qpnp_vib *vib, u8 *data, u16 reg)
 {
@@ -160,6 +161,43 @@ static int qpnp_vib_set(struct qpnp_vib *vib, int on)
 
 	return rc;
 }
+
+/* Begin Immersion changes */
+int qpnp_vib_set_with_vtglevel(struct qpnp_vib *vib, int vtglevel, int on)
+{
+        int rc;
+        u8 val;
+
+        if(vtglevel < QPNP_VIB_MIN_LEVEL) vtglevel = QPNP_VIB_MIN_LEVEL;
+        if(vtglevel > QPNP_VIB_MAX_LEVEL) vtglevel = QPNP_VIB_MAX_LEVEL;
+
+        if (on) {
+                val = vib->reg_vtg_ctl;
+                val &= ~QPNP_VIB_VTG_SET_MASK;                           
+                val |= (vtglevel & QPNP_VIB_VTG_SET_MASK);               
+                rc = qpnp_vib_write_u8(vib, &val, QPNP_VIB_VTG_CTL(vib->base));
+                if (rc < 0)                                              
+                        return rc;                                       
+                vib->reg_vtg_ctl = val;                                  
+                val = vib->reg_en_ctl;                                   
+                val |= QPNP_VIB_EN;
+                rc = qpnp_vib_write_u8(vib, &val, QPNP_VIB_EN_CTL(vib->base));
+                if (rc < 0)
+                        return rc;
+                vib->reg_en_ctl = val;
+        } else {
+                val = vib->reg_en_ctl;
+                val &= ~QPNP_VIB_EN;
+                rc = qpnp_vib_write_u8(vib, &val, QPNP_VIB_EN_CTL(vib->base));
+                if (rc < 0)
+                        return rc;
+                vib->reg_en_ctl = val;
+        }
+
+        return rc;
+}
+EXPORT_SYMBOL(qpnp_vib_set_with_vtglevel);
+/* End Immersion changes */
 
 static void qpnp_vib_enable(struct timed_output_dev *dev, int value)
 {

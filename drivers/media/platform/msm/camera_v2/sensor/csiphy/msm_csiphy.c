@@ -44,6 +44,7 @@ static int msm_csiphy_lane_config(struct csiphy_device *csiphy_dev,
 	uint32_t val = 0;
 	uint8_t lane_cnt = 0;
 	uint16_t lane_mask = 0;
+	uint16_t irq2 = 0;
 	void __iomem *csiphybase;
 	uint8_t csiphy_id = csiphy_dev->pdev->id;
 	csiphybase = csiphy_dev->base;
@@ -124,6 +125,28 @@ static int msm_csiphy_lane_config(struct csiphy_device *csiphy_dev,
 		j++;
 		lane_mask >>= 1;
 	}
+
+#if defined (CONFIG_HI351) || defined (CONFIG_HI543)
+	pr_err("%s padding the offset\n", __func__);
+	if(csiphy_dev->pdev->id == 0){//main camera
+		if(csiphy_dev->hw_version < CSIPHY_VERSION_V30){        //8x10, hi351
+			irq2 = msm_camera_io_r(csiphy_dev->base + MIPI_CSIPHY_LNCK_CFG4_ADDR);
+			pr_err("%s MIPI_CSIPHY_LNCK_CFG4_ADDR = 0x%x hw_ver : 0x%x\n", __func__, irq2, csiphy_dev->hw_version);
+
+			msm_camera_io_w(40, csiphy_dev->base + MIPI_CSIPHY_LNCK_CFG4_ADDR);
+		}else{  //8x26, hi543
+			irq2 = msm_camera_io_r(csiphy_dev->base + MIPI_CSIPHY_LNn_CFG4_ADDR);
+			pr_err("%s MIPI_CSIPHY_LNn_CFG4_ADDR = 0x%x hw_ver : 0x%x\n", __func__, irq2, csiphy_dev->hw_version);
+
+			msm_camera_io_w(40, csiphy_dev->base + MIPI_CSIPHY_LNn_CFG4_ADDR);
+		}
+	}else{
+		irq2 = 0;
+		}
+#else
+	irq2 = 0;
+#endif
+
 	return rc;
 }
 

@@ -20,6 +20,19 @@ fw-external-y := $(subst ",,$(CONFIG_EXTRA_FIRMWARE))
 # accurate. In the latter case it doesn't matter -- it'll use $(fw-shipped-all).
 # But be aware that the config file might not be included at all.
 
+touch_fw_list := $(subst .ihex, , $(notdir $(wildcard $(srctree)/firmware/melfas/$(TARGET_PRODUCT)/*.ihex)))
+touch_fw_files := $(foreach var, $(touch_fw_list), melfas/$(TARGET_PRODUCT)/$(var))
+
+fw-shipped-$(CONFIG_TOUCHSCREEN_MELFAS_MMS136) += melfas/mms100a_core54_v01.mfsb
+fw-shipped-$(CONFIG_TOUCHSCREEN_MELFAS_MMS136) += $(touch_fw_files)
+
+fw-shipped-$(CONFIG_TOUCHSCREEN_MELFAS_MMS100S) += melfas/mms100s_core32_v01.mfsb
+fw-shipped-$(CONFIG_TOUCHSCREEN_MELFAS_MMS100S) += $(touch_fw_files)
+
+fw-shipped-$(CONFIG_TOUCHSCREEN_LGE_MELFAS) += melfas/mms100a_core54_v01.mfsb
+fw-shipped-$(CONFIG_TOUCHSCREEN_LGE_MELFAS) += melfas/mms100s_core32_v01.mfsb
+fw-shipped-$(CONFIG_TOUCHSCREEN_LGE_MELFAS) += $(touch_fw_files)
+
 ifdef CONFIG_ACENIC_OMIT_TIGON_I
 acenic-objs := acenic/tg2.bin
 fw-shipped- += acenic/tg1.bin

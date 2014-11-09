@@ -1091,6 +1091,14 @@ config TOUCHSCREEN_LGE_MELFAS
          Say Y here if you have a Mefas MMS-100S or MMS-100A I2C touchscreen
          connected to your system.
 
+config TOUCHSCREEN_MELFAS_MMS100S
+        bool "Melfas MMS100s Series touch driver"
+        depends on I2C
+        default n
+        help
+         Say Y here if you have a Mefas MMS100s Series I2C touchscreen
+         connected to your system.
+
 config TOUCHSCREEN_GT9XX
 	bool "Goodix touchpanel GT9xx series"
 	depends on I2C

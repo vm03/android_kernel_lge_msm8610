@@ -199,6 +199,10 @@ vreg_get_fail:
 	return rc;
 } /* msm_dss_config_vreg */
 
+#if defined (CONFIG_MACH_MSM8X10_W5) || defined (CONFIG_MACH_MSM8X10_W6)
+int is_first_booting = 0;
+#endif
+
 int msm_dss_enable_vreg(struct dss_vreg *in_vreg, int num_vreg, int enable)
 {
 	int i = 0, rc = 0;
@@ -230,6 +234,32 @@ int msm_dss_enable_vreg(struct dss_vreg *in_vreg, int num_vreg, int enable)
 					in_vreg[i].vreg_name);
 				goto disable_vreg;
 			}
+#if defined (CONFIG_MACH_MSM8X10_W5) || defined (CONFIG_MACH_MSM8X10_W6)
+                        // VCI toggle for W5 Display (both for Tovis Shrink/Non-Shrink panel)
+                        if (strcmp(in_vreg[i].vreg_name, "vdda") == 0)
+                        {
+                                if (is_first_booting) {
+                                        rc = regulator_disable(in_vreg[i].vreg);
+                                }
+                                if (in_vreg[i].post_on_sleep)
+                                        msleep(in_vreg[i].post_on_sleep);
+                                if (rc < 0) {
+                                        DEV_ERR("%pS->%s: %s enable failed\n",
+                                                __builtin_return_address(0), __func__,
+                                                in_vreg[i].vreg_name);
+                                        goto disable_vreg;
+                                }
+                                rc = regulator_enable(in_vreg[i].vreg);
+                                if (in_vreg[i].post_on_sleep)
+                                        msleep(in_vreg[i].post_on_sleep);
+                                if (rc < 0) {
+                                        DEV_ERR("%pS->%s: %s enable failed\n",
+                                                __builtin_return_address(0), __func__,
+                                                in_vreg[i].vreg_name);
+                                        goto disable_vreg;
+                                }
+                        }
+#endif
 		}
 	} else {
 		for (i = num_vreg-1; i >= 0; i--)
@@ -243,6 +273,11 @@ int msm_dss_enable_vreg(struct dss_vreg *in_vreg, int num_vreg, int enable)
 					msleep(in_vreg[i].post_off_sleep);
 			}
 	}
+
+#if defined (CONFIG_MACH_MSM8X10_W5) || defined (CONFIG_MACH_MSM8X10_W6)
+	is_first_booting = 1;
+#endif
+
 	return rc;
 
 disable_vreg:
@@ -258,7 +293,6 @@ vreg_set_opt_mode_fail:
 		if (in_vreg[i].post_off_sleep)
 			msleep(in_vreg[i].post_off_sleep);
 	}
-
 	return rc;
 } /* msm_dss_enable_vreg */
 

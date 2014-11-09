@@ -1177,13 +1177,34 @@ static void mmc_sd_detect(struct mmc_host *host)
 		break;
 	}
 	if (!retries) {
-		printk(KERN_ERR "%s(%s): Unable to re-detect card (%d)\n",
-		       __func__, mmc_hostname(host), err);
-		err = _mmc_detect_card_removed(host);
+#if defined(CONFIG_MACH_MSM8X10_W3DS_OPEN_SCA) || defined(CONFIG_LGE_REINIT_SDCARD_FOR_DETECT_FAIL) || defined(CONFIG_MACH_MSM8X10_W3_GLOBAL_SCA)
+        // Try re-init the card when card detection is failed.
+        pr_warning("%s(%s): Unable to re-detect card (%d)\n", __func__, mmc_hostname(host), err);
+        mmc_power_off(host);
+        usleep_range(5000, 5500);
+        mmc_power_up(host);
+        mmc_select_voltage(host, host->ocr);
+        err = mmc_sd_init_card(host, host->ocr, host->card);
+ 
+        if (err) {
+            printk(KERN_ERR "%s: Re-init card in mmc_sd_detect() rc = %d (retries = %d)\n",
+                    mmc_hostname(host), err, retries);
+            err = _mmc_detect_card_removed(host);
+        }
+        else {
+            pr_info("%s(%s): Re-init card success in mmc_sd_detect()\n", __func__,
+                    mmc_hostname(host));
+        }
+#else
+                printk(KERN_ERR "%s(%s): Unable to re-detect card (%d)\n",
+                       __func__, mmc_hostname(host), err);
+                err = _mmc_detect_card_removed(host);
+#endif
 	}
 #else
 	err = _mmc_detect_card_removed(host);
 #endif
+
 	mmc_release_host(host);
 
 	/*

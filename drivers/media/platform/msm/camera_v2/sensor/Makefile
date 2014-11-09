@@ -20,3 +20,7 @@ obj-$(CONFIG_MT9M114) += mt9m114.o
 obj-$(CONFIG_SP1628) += sp1628.o
 obj-$(CONFIG_GC0339) += gc0339.o
 obj-$(CONFIG_HI351) += hi351.o
+obj-$(CONFIG_HI543)  += hi543.o
+obj-$(CONFIG_IMX111) += imx111.o
+obj-$(CONFIG_HI707)  += hi707.o
+obj-$(CONFIG_IMX219) += imx219.o

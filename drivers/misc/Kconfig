@@ -665,6 +665,31 @@ config TI_DRV2667
 	  To compile this driver as a module, choose M here: the
 	  module will be called ti_drv2667.
 
+config BU52061NVX
+       tristate "Cradle BU52061NVX support"
+       default n
+       help
+         This option enable device driver support for the cradle
+         on the PM8XXX chips. The cradle is controlled using the PM8XXX gpio
+
+config FMR_INTENNA
+        bool "fmr intenna support"
+        default n
+        help
+          This option enables device driver support for fmr intenna
+
+config TSPDRV
+    bool "tspdrv"
+        default n
+
+config TSPDRV_3_0V_VIBRATOR
+        bool "tspdrv use 3.0V Vibrator"
+        default n
+
+config TSPDRV_2_9V_VIBRATOR
+        bool "tspdrv use 2.9V Vibrator"
+        default n
+
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"

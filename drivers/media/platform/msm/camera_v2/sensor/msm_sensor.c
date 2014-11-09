@@ -1087,6 +1087,11 @@ int32_t msm_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 		}
 	}
 
+        /*LGE_CHANGE_S, mipi end packet issue, 2013-10-15, kwangsik83.kim@lge.com*/
+        if(strncmp(s_ctrl->sensordata->sensor_name, "hi707", strlen("hi707")) == 0)
+                s_ctrl->isFirstStream = TRUE;
+        /*LGE_CHANGE_E, mipi end packet issue, 2013-10-15, kwangsik83.kim@lge.com*/
+
 	CDBG("%s exit\n", __func__);
 	return 0;
 power_up_failed:
@@ -1212,6 +1217,12 @@ int32_t msm_sensor_power_down(struct msm_sensor_ctrl_t *s_ctrl)
 	msm_camera_request_gpio_table(
 		data->gpio_conf->cam_gpio_req_tbl,
 		data->gpio_conf->cam_gpio_req_tbl_size, 0);
+
+        /*LGE_CHANGE_S, mipi end packet issue, 2013-10-15, kwangsik83.kim@lge.com*/
+        if(strncmp(s_ctrl->sensordata->sensor_name, "hi707", strlen("hi707")) == 0)
+                s_ctrl->isFirstStream = FALSE;
+        /*LGE_CHANGE_E, mipi end packet issue, 2013-10-15, kwangsik83.kim@lge.com*/
+
 	CDBG("%s exit\n", __func__);
 	return 0;
 }

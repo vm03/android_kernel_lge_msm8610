@@ -70,3 +70,6 @@ obj-$(CONFIG_QSEECOM) += qseecom.o
 obj-$(CONFIG_QFP_FUSE) += qfp_fuse.o
 obj-$(CONFIG_TI_DRV2667) += ti_drv2667.o
 obj-$(CONFIG_QPNP_MISC) += qpnp-misc.o
+obj-$(CONFIG_BU52061NVX) += pm8xxx-cradle.o
+obj-$(CONFIG_FMR_INTENNA) += fmr_intenna.o
+obj-$(CONFIG_TSPDRV) += tspdrv/

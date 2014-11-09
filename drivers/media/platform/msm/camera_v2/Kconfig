@@ -251,7 +251,47 @@ config MSM_GEMINI
 	  Enables support for the Gemini JPEG encoder engine for 8x60.
 
 config HI351
-<------>bool "Sensor HI351 (YUV 3M)"
-<------>depends on MSMB_CAMERA
-<------>---help---
-<------>Hynix 3M YUV Sensor
+	bool "Sensor HI351 (YUV 3M)"
+	depends on MSMB_CAMERA
+	---help---
+	Hynix 3M YUV Sensor
+
+config HI543
+    bool "Sensor hi543 (Hynix 5MP)"
+    depends on MSMB_CAMERA
+    ---help---
+        Support for HI543 sensor driver.
+        This is a Hynix 5MP Bayer Sensor with autofocus.
+        Say Y if the platform uses HI543 sensor.
+
+config IMX111
+        bool "Sensor imx111 (Sony 8MP)"
+        depends on MSMB_CAMERA
+        ---help---
+                Support for IMX111 sensor driver.
+                This is a Sony 8MP Bayer Sensor with autofocus.
+                Say Y if the platform uses IMX111 sensor.
+
+config HI707
+        bool "Sensor HI707 (YUV VGA)"
+        depends on MSMB_CAMERA
+        ---help---
+                HI707 is Aptina YUV sensor. It supports VGA preview
+                and snapshot. The preview and snapshot resolution shall be
+                640 * 480. It does not support auto focus. It supports
+                few special effects like saturation.
+
+config BACKLIGHT_RT8542
+        tristate "Backlight driver for rt8542 visualisation device"
+        depends on BACKLIGHT_CLASS_DEVICE
+        help
+          To compile this driver as a module, choose M here: the module will be
+          called rt8542 driver.
+
+config IMX219
+        bool "Sensor imx219 (Sony 8MP)"
+        depends on MSMB_CAMERA
+        ---help---
+                Support for IMX219 sensor driver.
+                This is a Sony 8MP Bayer Sensor with autofocus.
+                Say Y if the platform uses IMX219 sensor.

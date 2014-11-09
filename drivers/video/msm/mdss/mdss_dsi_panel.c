@@ -38,6 +38,15 @@ extern void lm3530_lcd_backlight_set_level(int level);
 extern void rt8542_lcd_backlight_set_level(int level);
 #endif
 
+#if defined (CONFIG_MACH_MSM8X10_W5)
+/* At booting up, Between LG Logo and Operation Animation showing, abnormal LG Logo is appearing one time.
+Because LG Logo image format is RGB888, Android side image format is RGBA8888, both Image formats are mismatched.
+So, We add the code to change MDP_RGBA_8888 to MDP_RGB_888 at mdp3_overlay_set when is_done_drawing_logo is not "1".
+is_done_drawing_logo is set to 1 at mdss_dsi_panel_off.
+*/
+char is_done_drawing_logo = 0;
+#endif
+
 #if defined(CONFIG_LGE_MIPI_TOVIS_VIDEO_540P_PANEL) || defined(CONFIG_FB_MSM_MIPI_TIANMA_VIDEO_QHD_PT_PANEL)
 static struct dsi_panel_cmds lge_display_on_cmds;
 static struct dsi_panel_cmds lge_sleep_in_cmds;
@@ -423,6 +432,15 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		if (has_dsv_f)
 			mdss_dsi_panel_reset(pdata, 0);
 	}
+#endif
+
+#if defined (CONFIG_MACH_MSM8X10_W5)
+/* At booting up, Between LG Logo and Operation Animation showing, abnormal LG Logo is appearing one time.
+Because LG Logo image format is RGB888, Android side image format is RGBA8888, both Image formats are mismatched.
+So, We add the code to change MDP_RGBA_8888 to MDP_RGB_888 at mdp3_overlay_set when is_done_drawing_logo is not "1".
+is_done_drawing_logo is set to 1 at mdss_dsi_panel_off.
+*/
+	is_done_drawing_logo = 1;
 #endif
 
 	pr_info("%s:-\n", __func__);
