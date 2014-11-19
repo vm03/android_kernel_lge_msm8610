@@ -100,3 +100,5 @@ obj-$(CONFIG_LGE_TOUCH_SYNAPTICS) += lge_touch_core.o
 obj-$(CONFIG_LGE_TOUCH_SYNAPTICS) += touch_synaptics.o
 obj-$(CONFIG_LGE_TOUCH_SYNAPTICS_FW_UPGRADE) += touch_synaptics_fw_upgrade.o
 obj-$(CONFIG_LGE_TOUCH_SYNAPTICS)	+= DS4/
+obj-$(CONFIG_TOUCHSCREEN_APS_MELFAS)	+= aps_ts.o
+obj-$(CONFIG_TOUCHSCREEN_ADS_AGS04)	+= ags04_ts.o

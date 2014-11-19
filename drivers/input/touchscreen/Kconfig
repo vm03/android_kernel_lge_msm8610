@@ -1109,6 +1109,28 @@ config TOUCHSCREEN_GT9XX
 
           If unsure, say N.
 
+config TOUCHSCREEN_APS_MELFAS
+        tristate "LGDisplay touchscreen with melfas"
+        depends on I2C
+        help
+          Say Y here to enable support for Melfas Touch driver
+          series touchscreen controller.
+          
+          If unsure, say N.
+
+          To compile this driver as module, choose M here: the
+          module will be called ldctc
+
+config TOUCHSCREEN_ADS_AGS04
+        tristate "AD-Semiconductor AGS04 touch sensor driver"
+        depends on I2C
+        default n
+        help
+          Say Y here to enable support for
+          AD-Semiconductor touchsensor controller.
+
+          If unsure, say N.
+
 source "drivers/input/touchscreen/gt9xx/Kconfig"
 
 endif
