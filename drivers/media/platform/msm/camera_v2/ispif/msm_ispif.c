@@ -97,13 +97,19 @@ static int msm_ispif_reset_hw(struct ispif_device *ispif)
 	int rc = 0;
 	long timeout = 0;
 	struct clk *reset_clk[ARRAY_SIZE(ispif_8974_reset_clk_info)];
-
+#if defined(CONFIG_HI351)
+       if(ispif->hw_num_isps > 1){
+#else
+       {
+#endif
+/*LGE CHANGE_E, 2013-12-13, this is for shutter lag issue, STOP_IMMEDIATELY, youngwook.song@lge.com */
 	rc = msm_cam_clk_enable(&ispif->pdev->dev,
 		ispif_8974_reset_clk_info, reset_clk,
 		ARRAY_SIZE(ispif_8974_reset_clk_info), 1);
-	if (rc < 0) {
-		pr_err("%s: cannot enable clock, error = %d",
-			__func__, rc);
+		if (rc < 0) {
+			pr_err("%s: cannot enable clock, error = %d",
+				__func__, rc);
+		}
 	}
 
 	init_completion(&ispif->reset_complete[VFE0]);
@@ -160,6 +166,13 @@ static int msm_ispif_clk_ahb_enable(struct ispif_device *ispif, int enable)
 		/* Older ISPIF versiond don't need ahb clokc */
 		return 0;
 	}
+/*LGE CHANGE_S, 2013-12-13, this is for shutter lag issue, STOP_IMMEDIATELY, youngwook.song@lge.com */ 
+#if defined(CONFIG_HI351)
+       if(ispif->hw_num_isps > 1){
+#else
+       {
+#endif
+/*LGE CHANGE_E, 2013-12-13, this is for shutter lag issue, STOP_IMMEDIATELY, youngwook.song@lge.com */
 
 	rc = msm_cam_clk_enable(&ispif->pdev->dev,
 		ispif_8974_ahb_clk_info, &ispif->ahb_clk,
@@ -167,6 +180,7 @@ static int msm_ispif_clk_ahb_enable(struct ispif_device *ispif, int enable)
 	if (rc < 0) {
 		pr_err("%s: cannot enable clock, error = %d",
 			__func__, rc);
+	}
 	}
 
 	return rc;
@@ -939,7 +953,10 @@ static int msm_ispif_init(struct ispif_device *ispif,
 		pr_err("%s: ahb_clk enable failed", __func__);
 		goto error_ahb;
 	}
-
+/*LGE CHANGE_S, 2013-12-13, this is for shutter lag issue, STOP_IMMEDIATELY, youngwook.song@lge.com */ 
+#if defined(CONFIG_HI351)
+               msm_ispif_reset_hw(ispif);
+#endif
 	if (of_device_is_compatible(ispif->pdev->dev.of_node,
 				    "qcom,ispif-v3.0")) {
 		/* currently HW reset is implemented for 8974 only */
