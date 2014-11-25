@@ -21,7 +21,7 @@
 #include <mach/msm_bus.h>
 #include <mach/msm_bus_board.h>
 
-#if defined(CONFIG_LCD_KCAL)
+#if 0 //defined(CONFIG_LCD_KCAL)
 #include <mach/board_lge.h>
 extern int g_kcal_r;
 extern int g_kcal_g;
@@ -1771,7 +1771,7 @@ int mdss_mdp_pp_resume(struct mdss_mdp_ctl *ctl, u32 dspp_num)
 			mdss_pp_res->gamut_disp_cfg[disp_num].flags |=
 				MDP_PP_OPS_WRITE;
 	}
-#if defined(CONFIG_LCD_KCAL)
+#if 0 //defined(CONFIG_LCD_KCAL)
 	if (disp_num == 0)
 		pp_sts.pgc_sts |= PP_STS_ENABLE;
 #endif
@@ -1787,7 +1787,7 @@ int mdss_mdp_pp_resume(struct mdss_mdp_ctl *ctl, u32 dspp_num)
 	return 0;
 }
 
-#if defined(CONFIG_LCD_KCAL)
+#if 0 //defined(CONFIG_LCD_KCAL)
 static struct mdp_ar_gc_lut_data test_r[GC_LUT_SEGMENTS] =
 {
 	{0x00000000, 0x00000000, 0x00000000},
@@ -1980,7 +1980,7 @@ int mdss_mdp_pp_init(struct device *dev)
 		}
 
 	}
-#if defined(CONFIG_LCD_KCAL)
+#if 0 //defined(CONFIG_LCD_KCAL)
 	if (!ret) {
 		mdss_mdp_pp_argc();
 		update_preset_lcdc_lut();

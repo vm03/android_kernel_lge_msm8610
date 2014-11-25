@@ -634,7 +634,7 @@ hw_rev_type lge_get_board_revno(void)
     return lge_bd_rev;
 }
 
-#if defined(CONFIG_LCD_KCAL)
+#if 0 //defined(CONFIG_LCD_KCAL)
 int g_kcal_r = 255;
 int g_kcal_g = 255;
 int g_kcal_b = 255;
