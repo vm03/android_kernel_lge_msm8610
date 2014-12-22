@@ -13,59 +13,50 @@
 &soc {
 	i2c@f9923000{
 		mms100s@48 {
-			melfas,product = "I2S45B";
+			melfas,product = "I4S45A";
 			melfas,max-x = <480>;
 			melfas,max-y = <800>;
                         melfas,use_vdd_i2c = <1>;
 			melfas,gpio-vdd-en = <62>;
-			melfas,key-map = <158 139>;
-			melfas,fw-image-name = "melfas/w5_global_com/w5_global_com_rev_b_v101.mfsb";
+			melfas,key-map = <158 172 139 249>;
+			melfas,fw-image-name = "melfas/w5ds_global_com/w5ds_global_com_rev_b_v1.04.mfsb";
+                        revision = "rev_a...rev_b";
 			status = "ok";
-			revision = "rev_b";
 		};
-
 		mms100s@48_rev_c {
-			melfas,product = "I2S45B";
+			melfas,product = "I4S45A";
 			melfas,max-x = <480>;
 			melfas,max-y = <800>;
                         melfas,use_vdd_i2c = <1>;
 			melfas,gpio-vdd-en = <82>;
-			melfas,key-map = <158 139>;
-			melfas,fw-image-name = "melfas/w5_global_com/w5_global_com_rev_b_v101.mfsb";
+			melfas,key-map = <158 172 139 249>;
+			melfas,fw-image-name = "melfas/w5ds_global_com/w5ds_global_com_rev_b_v1.04.mfsb";
+                        revision = "rev_c";
 			status = "ok";
-			revision = "rev_c";
 		};
-
-		lgd_melfas@34 {
-			status = "ok";
-			revision = "rev_a";
-		};
-
-		ads_ags04@6a {
-			status = "ok";
-			revision = "rev_a";
-		};
-		
 		synaptics_red@20 {
 			status = "disable";
 			revision = "rev_d...";
-			synaptics,button-map = <158 139>;
+			synaptics,button-map = <158 172 139 249>;
+			synaptics,i2c-pull-up = <0>;
+			synaptics,power-down  = <1>;
 			synaptics,gpio_vdd_en  = <82>;
 		};
 		
 		synaptics_s220x@20 {
 			status = "ok";
 			revision = "rev_d...";
-			synaptics,fw_version_info = <0x82 0x04 0x51>;
-			synaptics,fw_image = "synaptics/w5_global_com/PLG389-V1.10-PR1600582-DS4.3.5.1.16_1204518A.img", /* panel id 0 */
-					     "synaptics/w5_global_com/PLG317-V1.14-PR1600582-DS4.3.5.1.16_3204518E.img"; /* panel id 1 */
-                        synaptics,panel_spec = "synaptics/w5_global_com/w5_Suntel_limit.txt", /* panel id 0 */
-                        			"synaptics/w5_global_com/w5_Inotek_limit.txt";/* panel id 1 */
+			synaptics,fw_version_info = <0x84 0x04 0x51>;
+			synaptics,fw_image = "synaptics/w5ds_global_com/PLG388-V1.10-PR1600582-DS4.3.5.1.16_1404518A.img", /*panel id 0*/
+					     "synaptics/w5ds_global_com/PLG316-V1.13-PR1600582-DS4.3.5.1.16_3404518D.img"; /*panel id 1*/
+                        synaptics,panel_spec = "synaptics/w5ds_global_com/w5ds_Suntel_limit.txt", /*panel id 0*/
+			                        "synaptics/w5ds_global_com/w5ds_Inotek_limit.txt";/*panel id 1*/
                         synaptics,global_access_pixel = <10>;
 			lge,knock_on_type = <1>;
+
 			synaptics,platform_data	{
-				number_of_button = <2>;
-				button_name = [9e 8b];
+				number_of_button = <4>;
+				button_name = [9e ac 8b f9];
 				x_max = <960>;
 				y_max = <1600>;
 				lcd_x = <480>;
