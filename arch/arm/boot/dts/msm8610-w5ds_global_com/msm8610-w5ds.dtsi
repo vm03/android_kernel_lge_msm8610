@@ -18,6 +18,7 @@
 /include/ "msm8610-w5ds-misc.dtsi"
 /include/ "msm8610-w5ds-pm.dtsi"
 /include/ "msm8610-w5ds-camera.dtsi"
+/include/ "msm8610-w5-nfc.dtsi"  /* LGE_CHANGE, [NFC][taesik.kim@lge.com], NFC Bring up */
 
 &soc {
 	serial@f991f000 {
