@@ -49,7 +49,7 @@
 		synaptics_red@20 {
 			status = "disable";
 			revision = "rev_d...";
-			synaptics,button-map = <158 139>;
+			synaptics,button-map = <158 172 139 249>;
 			synaptics,gpio_vdd_en  = <82>;
 		};
 
@@ -64,8 +64,8 @@
                         synaptics,global_access_pixel = <10>;
 			lge,knock_on_type = <1>;
 			synaptics,platform_data	{
-				number_of_button = <2>;
-				button_name = [9e 8b];
+				number_of_button = <4>;
+				button_name = [9e ac 8b f9];
 				x_max = <960>;
 				y_max = <1600>;
 				lcd_x = <480>;
