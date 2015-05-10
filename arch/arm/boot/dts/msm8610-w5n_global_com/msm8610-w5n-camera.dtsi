@@ -91,6 +91,7 @@
 		cell-index = <0>;	//Use Af_main_0 of dw9716 with HI543(5M)
 		reg = <0x1A 0x0>;
 		compatible = "qcom,actuator";
+		status = "okay";
 	};
 
 /* IMX111(8M) eeprom */
@@ -280,7 +281,7 @@
 		qcom,csi-lane-mask = <0x7>;
 		qcom,sensor-position = <0>;
 		qcom,sensor-mode = <0>;
-		status = "decide_in_lk";
+		status = "okay";
 		revision = "rev_b...";
 	};
 
