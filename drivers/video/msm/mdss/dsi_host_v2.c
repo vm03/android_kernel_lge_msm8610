@@ -971,7 +971,7 @@ int msm_dsi_cmdlist_commit(struct mdss_dsi_ctrl_pdata *ctrl, int from_mdp)
 	if(lge_lcd_id == 1)	// W5 Tovis LCD
 #endif
 	dsi_set_tx_power_mode(0);
-#endif.
+#endif
 #if defined(CONFIG_MACH_MSM8X10_W65)
 	dsi_set_tx_power_mode(0);
 #endif
@@ -989,7 +989,7 @@ int msm_dsi_cmdlist_commit(struct mdss_dsi_ctrl_pdata *ctrl, int from_mdp)
 	if(lge_lcd_id == 1)	//W5 tovis LCD
 #endif
 	dsi_set_tx_power_mode(1);
-#endif.
+#endif
 #if defined(CONFIG_MACH_MSM8X10_W65)
 	dsi_set_tx_power_mode(1);
 #endif
