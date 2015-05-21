@@ -64,8 +64,16 @@ static int dsi_panel_handler(struct mdss_panel_data *pdata, int enable)
 				panel_data);
 
 	if (enable) {
+#if !(defined (CONFIG_MACH_MSM8X10_W6) || defined(CONFIG_MACH_MSM8X10_W55))
+#if defined (CONFIG_MACH_MSM8X10_W5)
+		if(lge_lcd_id == 1){		// W5 Tovis LCD
+#endif
 		dsi_ctrl_gpio_request(ctrl_pdata);
 		mdss_dsi_panel_reset(pdata, 1);
+#if defined (CONFIG_MACH_MSM8X10_W5)
+		}
+#endif
+#endif
 		rc = ctrl_pdata->on(pdata);
 		if (rc)
 			pr_err("dsi_panel_handler panel on failed %d\n", rc);

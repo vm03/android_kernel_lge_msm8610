@@ -963,16 +963,36 @@ int msm_dsi_cmdlist_commit(struct mdss_dsi_ctrl_pdata *ctrl, int from_mdp)
 
 	msm_dsi_clk_ctrl(&ctrl->panel_data, 1);
 
-	if (0 == (req->flags & CMD_REQ_LP_MODE))
-		dsi_set_tx_power_mode(0);
+//	if (0 == (req->flags & CMD_REQ_LP_MODE))
+//		dsi_set_tx_power_mode(0);
+
+#if !(defined (CONFIG_MACH_MSM8X10_W6) || defined(CONFIG_MACH_MSM8X10_W55))
+#if defined (CONFIG_MACH_MSM8X10_W5)
+	if(lge_lcd_id == 1)	// W5 Tovis LCD
+#endif
+	dsi_set_tx_power_mode(0);
+#endif.
+#if defined(CONFIG_MACH_MSM8X10_W65)
+	dsi_set_tx_power_mode(0);
+#endif
 
 	if (req->flags & CMD_REQ_RX)
 		msm_dsi_cmdlist_rx(ctrl, req);
 	else
 		msm_dsi_cmdlist_tx(ctrl, req);
 
-	if (0 == (req->flags & CMD_REQ_LP_MODE))
-		dsi_set_tx_power_mode(1);
+//	if (0 == (req->flags & CMD_REQ_LP_MODE))
+//		dsi_set_tx_power_mode(1);
+
+#if !(defined (CONFIG_MACH_MSM8X10_W6) || defined(CONFIG_MACH_MSM8X10_W55))
+#if defined (CONFIG_MACH_MSM8X10_W5)
+	if(lge_lcd_id == 1)	//W5 tovis LCD
+#endif
+	dsi_set_tx_power_mode(1);
+#endif.
+#if defined(CONFIG_MACH_MSM8X10_W65)
+	dsi_set_tx_power_mode(1);
+#endif
 
 	msm_dsi_clk_ctrl(&ctrl->panel_data, 0);
 
@@ -1131,6 +1151,37 @@ static int msm_dsi_on(struct mdss_panel_data *pdata)
 
 	msm_dsi_sw_reset();
 	msm_dsi_host_init(mipi);
+
+
+#if defined(CONFIG_MACH_MSM8X10_W5)
+#if !defined(CONFIG_MACH_MSM8X10_W55)
+        if(lge_lcd_id == 0){                                                            // W5 LGD LG4577
+                u32 tmp;
+                tmp = MIPI_INP(ctrl_base + DSI_LANE_CTRL);
+                tmp &= ~(1<<28);
+                MIPI_OUTP(ctrl_base + DSI_LANE_CTRL, tmp);
+                wmb();
+                        
+                msleep(10);
+                dsi_ctrl_gpio_request(ctrl_pdata);
+                mdss_dsi_panel_reset(pdata, 1);
+                mipi->force_clk_lane_hs = 1;
+        }
+#else                                                                                                   // W55
+        {
+                u32 tmp;
+                tmp = MIPI_INP(ctrl_base + DSI_LANE_CTRL);
+                tmp &= ~(1<<28);
+                MIPI_OUTP(ctrl_base + DSI_LANE_CTRL, tmp);
+                wmb();
+        }
+                        
+        msleep(10);
+        dsi_ctrl_gpio_request(ctrl_pdata);
+        mdss_dsi_panel_reset(pdata, 1);
+        mipi->force_clk_lane_hs = 1;
+#endif
+#endif
 
 	if (mipi->force_clk_lane_hs) {
 		u32 tmp;
