@@ -1645,7 +1645,7 @@ static int hci_fm_set_cal_req_proc(struct radio_hci_dev *hdev,
 	opcode = hci_opcode_pack(HCI_OGF_FM_COMMON_CTRL_CMD_REQ,
 		HCI_OCF_FM_SET_CALIBRATION);
 	return radio_hci_send_cmd(hdev, opcode,
-		sizeof(hci_fm_set_cal_req_proc), cal_req);
+		sizeof(struct hci_fm_set_cal_req_proc), cal_req);
 }
 
 static int hci_fm_do_cal_req(struct radio_hci_dev *hdev,
@@ -3728,7 +3728,6 @@ static int iris_vidioc_s_ctrl(struct file *file, void *priv,
 		}
 		saved_val = radio->mute_mode.hard_mute;
 		radio->mute_mode.hard_mute = ctrl->value;
-		radio->mute_mode.soft_mute = IOC_SFT_MUTE;
 		retval = hci_set_fm_mute_mode(
 				&radio->mute_mode,
 				radio->fm_hdev);
@@ -5076,10 +5075,26 @@ static const struct v4l2_ioctl_ops iris_ioctl_ops = {
 	.vidioc_g_ext_ctrls           = iris_vidioc_g_ext_ctrls,
 };
 
+static int is_initialized = 0;
+static int video_open(struct file *file) {
+	int retval;
+	if(!is_initialized) {
+		retval = hci_fm_smd_register();
+		if (retval) {
+			FMDERR(": hci_fm_smd_register failed\n");
+			return retval;
+		}
+		is_initialized = 1;
+	}
+
+	return 0;
+}
+
 static const struct v4l2_file_operations iris_fops = {
 	.owner = THIS_MODULE,
 	.unlocked_ioctl = video_ioctl2,
 	.release        = iris_fops_release,
+	.open = video_open,
 };
 
 static struct video_device iris_viddev_template = {
@@ -5199,6 +5214,9 @@ static int __devexit iris_remove(struct platform_device *pdev)
 		FMDERR(":radio is null");
 		return -EINVAL;
 	}
+
+	hci_fm_smd_deregister();
+
 	video_unregister_device(radio->videodev);
 
 	for (i = 0; i < IRIS_BUF_MAX; i++)
